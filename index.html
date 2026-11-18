@@ -3,126 +3,870 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Cueva Mística - Catálogo Mágico</title>
-    <style>
-        :root {
-            --bg-dark: #12121a;
-            --card-bg: #1a1a24;
-            --accent: #9333ea;
-            --accent-hover: #7e22ce;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --gold: #f59e0b;
+    <title id="page-title">La Cueva Mística | Tienda Esotérica</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mistica: {
+                            50: '#f9f5ff', 100: '#f3e8ff', 200: '#e9d5ff', 300: '#d8b4fe',
+                            400: '#c084fc', 500: '#a855f7', 600: '#9333ea', 700: '#7e22ce',
+                            800: '#6b21a8', 900: '#581c87', 950: '#3b0764'
+                        }
+                    }
+                }
+            }
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-dark); margin: 0; padding: 20px; color: var(--text-main); }
-        header { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 15px 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(147, 51, 234, 0.15); border: 1px solid rgba(147, 51, 234, 0.3); }
-        h1 { margin: 0; font-size: 24px; color: #d8b4fe; letter-spacing: 1px; }
-        .btn { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-        .btn:hover { background: var(--accent-hover); }
-        .btn-danger { background: #ef4444; }
-        .btn-danger:hover { background: #dc2626; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-3px); border-color: rgba(147, 51, 234, 0.4); }
-        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
-        .card h3 { margin: 5px 0; font-size: 18px; color: var(--text-main); }
-        .card p { color: var(--gold); font-weight: bold; font-size: 17px; margin: 5px 0 15px 0; }
-        
-        /* Panel Admin */
-        #admin-panel { background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid var(--accent); box-shadow: 0 4px 20px rgba(0,0,0,0.4); display: none; }
-        #admin-panel.active { display: block; }
-        input, textarea { width: 100%; padding: 10px; margin-bottom: 12px; background: #0f0f13; border: 1px solid #374151; color: white; border-radius: 6px; box-sizing: border-box; }
-        input:focus, textarea:focus { border-color: var(--accent); outline: none; }
-        .config-box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; border: 1px dashed #4b5563; }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <header>
-        <h1>🔮 La Cueva Mística</h1>
-        <button class="btn" onclick="toggleAdmin()">⚙️ Panel Administrador</button>
-    </header>
+    <!-- HEADER / NAVEGACIÓN -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-mistica-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <button onclick="toggleSidebar()" class="p-2.5 rounded-xl hover:bg-mistica-50 text-mistica-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-bars text-xl"></i>
+                <span class="hidden sm:inline font-medium text-sm">Menú</span>
+            </button>
 
-    <div class="container">
-        <!-- Panel de Administración -->
-        <div id="admin-panel">
-            <h2>Panel de Control Mágico</h2>
-            <div class="config-box">
-                <p><strong>Configuración de Conexión (Solo la primera vez desde este navegador):</strong></p>
-                <input type="text" id="gh-owner" placeholder="Tu usuario de GitHub (Ej: tu-usuario)">
-                <input type="text" id="gh-repo" placeholder="Nombre de tu repositorio (Ej: mitienda)">
-                <input type="password" id="gh-token" placeholder="GitHub Personal Access Token (ghp_...)">
-                <button class="btn" onclick="saveConfig()">Guardar Llave de Conexión</button>
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showCatalogView()">
+                <div id="header-logo-container" class="w-12 h-12 rounded-full overflow-hidden border-2 border-mistica-300 shadow-md bg-white flex items-center justify-center">
+                    <div class="w-full h-full bg-mistica-900 text-white flex items-center justify-center font-cinzel font-bold text-sm">CM</div>
+                </div>
+                <div>
+                    <h1 id="store-title-header" class="font-cinzel font-bold text-lg text-mistica-900 tracking-wide">LA CUEVA MÍSTICA</h1>
+                    <p id="store-location-header" class="text-xs text-slate-500">Ayacucho, Bs. As.</p>
+                </div>
             </div>
 
-            <h3>Agregar Nuevo Tesoro</h3>
-            <input type="text" id="p-name" placeholder="Nombre del producto / artefacto">
-            <input type="text" id="p-price" placeholder="Precio (Ej: 15000)">
-            <input type="text" id="p-image" placeholder="URL de la imagen (Link directo de foto)">
-            <button class="btn" onclick="addProduct()">✨ Guardar y Publicar en la Web</button>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleCart()" class="relative bg-mistica-100 hover:bg-mistica-200 text-mistica-800 p-2.5 rounded-xl transition flex items-center gap-2">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-counter" class="absolute -top-1.5 -right-1.5 bg-mistica-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow">0</span>
+                </button>
+                <button onclick="openAdminModal()" class="text-slate-400 hover:text-mistica-700 p-2.5 rounded-xl transition" title="Panel de Administración">
+                    <i class="fa-solid fa-lock text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MENÚ LATERAL DESPLEGABLE -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-50 hidden transition-opacity"></div>
+    <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-80 bg-white z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-5 border-b border-mistica-100 flex items-center justify-between bg-mistica-50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-mistica-200 flex items-center justify-center text-mistica-800 font-cinzel font-bold">CM</div>
+                <span class="font-cinzel font-bold text-mistica-900">Menú Principal</span>
+            </div>
+            <button onclick="toggleSidebar()" class="p-2 text-slate-500 hover:text-slate-800 rounded-lg"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-2">
+            <button onclick="filterCategory('todos'); toggleSidebar();" class="w-full text-left px-4 py-3 rounded-xl hover:bg-mistica-50 font-medium text-slate-700 flex items-center gap-3 transition">
+                <i class="fa-solid fa-store text-mistica-600 w-5"></i> Todos los Productos
+            </button>
+            <div class="pt-2 pb-1 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Categorías</div>
+            <div id="sidebar-categories-container" class="space-y-1"></div>
+
+            <div class="pt-4 pb-1 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Información Útil</div>
+            <div class="px-4 py-3 bg-mistica-50/60 rounded-xl space-y-2 text-xs text-slate-600">
+                <p><i class="fa-solid fa-location-dot text-mistica-600 mr-2"></i><strong id="sidebar-address">Av. Miguens 544</strong>, Ayacucho Bs. As.</p>
+                <p><i class="fa-solid fa-clock text-mistica-600 mr-2"></i><span id="sidebar-hours">Lun a Sáb: 08:00 a 12:00 | 16:30 a 20:00</span></p>
+                <p><i class="fa-solid fa-wallet text-mistica-600 mr-2"></i>Efectivo, Transferencia y Tarjetas</p>
+            </div>
+        </div>
+        <div class="p-4 border-t border-slate-100 text-center text-xs text-slate-400">
+            La Cueva Mística © 2026
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-8">
+        
+        <!-- VISTA CATÁLOGO -->
+        <div id="catalog-view" class="space-y-8">
+            <section class="bg-gradient-to-r from-mistica-900 via-mistica-800 to-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="space-y-4 max-w-xl text-center md:text-left">
+                    <span class="bg-mistica-700/60 text-mistica-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Tienda Esotérica & Bienestar</span>
+                    <p class="text-slate-200 text-sm md:text-base leading-relaxed bg-black/20 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+                        Una tienda esotérica es un comercio especializado en la venta de productos, herramientas y literatura vinculados a la espiritualidad, el misticismo, la magia y la adivinación.
+                    </p>
+                    <h2 class="font-cinzel text-2xl md:text-3xl font-bold tracking-wide">Encontrá tu equilibrio espiritual</h2>
+                    <div class="pt-2 flex flex-wrap gap-3 justify-center md:justify-start">
+                        <a id="hero-whatsapp-btn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-2 text-sm">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Consultas / WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div id="hero-logo-container" class="w-40 h-40 rounded-full border-4 border-mistica-400/40 p-2 shadow-2xl bg-white/10 backdrop-blur flex items-center justify-center shrink-0">
+                    <div class="w-full h-full bg-mistica-800 text-white flex items-center justify-center font-cinzel font-bold text-xl rounded-full">CM</div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN PRODUCTOS -->
+            <section class="space-y-6">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                    <div>
+                        <h3 id="current-category-title" class="font-cinzel text-2xl font-bold text-slate-900">Catálogo de Productos</h3>
+                        <p class="text-xs text-slate-500">Hacé clic en cualquier producto para ver detalles, opciones y realizar tu pedido</p>
+                    </div>
+                    <div class="relative w-full md:w-72">
+                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="search-input" oninput="renderProducts()" placeholder="Buscar producto..." class="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-mistica-500 shadow-sm">
+                    </div>
+                </div>
+
+                <div id="category-pills-container" class="flex items-center gap-2 overflow-x-auto pb-2"></div>
+
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
         </div>
 
-        <!-- Listado de Productos -->
-        <div class="grid" id="product-grid">
-            <p>Invocando tesoros de La Cueva Mística...</p>
+        <!-- VISTA DETALLE DE PRODUCTO -->
+        <div id="detail-view" class="space-y-8 hidden">
+            <button onclick="showCatalogView()" class="inline-flex items-center gap-2 text-xs font-bold text-mistica-800 bg-mistica-100 hover:bg-mistica-200 px-4 py-2.5 rounded-xl transition">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Catálogo
+            </button>
+            <div id="product-detail-container" class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-10"></div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500 space-y-3">
+        <p id="footer-address" class="font-cinzel font-bold text-mistica-900 text-sm">LA CUEVA MÍSTICA • Av. Miguens 544, Ayacucho Bs. As.</p>
+        <div class="flex justify-center gap-4 text-lg">
+            <a id="footer-wa-link" href="#" target="_blank" class="text-emerald-600 hover:scale-110 transition" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/cuevamistica" target="_blank" class="text-pink-600 hover:scale-110 transition" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1CfPm5YAPG/?mibextid=wwXIfr" target="_blank" class="text-blue-600 hover:scale-110 transition" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        </div>
+    </footer>
+
+    <!-- CARRITO MODAL -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex justify-end">
+        <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-mistica-50">
+                <h4 class="font-cinzel font-bold text-mistica-900"><i class="fa-solid fa-bag-shopping text-mistica-600 mr-2"></i> Tu Pedido</h4>
+                <button onclick="toggleCart()" class="p-2 text-slate-400 hover:text-slate-700 font-bold text-lg">×</button>
+            </div>
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3 divide-y divide-slate-100"></div>
+            <div class="p-5 border-t border-slate-200 bg-white space-y-4">
+                <div class="flex justify-between items-center text-lg font-bold">
+                    <span>Total estimado:</span>
+                    <span id="cart-total" class="text-mistica-700">$0</span>
+                </div>
+                <a id="whatsapp-checkout-btn" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> Enviar pedido por WhatsApp
+                </a>
+            </div>
         </div>
     </div>
 
+    <!-- PANEL DE ADMINISTRACIÓN -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-mistica-900 text-white">
+                <h3 class="font-cinzel font-bold text-base"><i class="fa-solid fa-shield-halved mr-2 text-mistica-400"></i> Panel de Administración</h3>
+                <button onclick="closeAdminModal()" class="text-slate-300 hover:text-white p-2 font-bold text-lg">×</button>
+            </div>
+            
+            <div id="admin-login-view" class="p-8 space-y-4 text-center">
+                <p class="text-sm text-slate-600">Ingresá la clave de administración:</p>
+                <div class="max-w-xs mx-auto flex gap-2">
+                    <input type="password" id="admin-pass-input" placeholder="Contraseña" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-mistica-600">
+                    <button onclick="verifyAdminPass()" class="bg-mistica-800 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-mistica-700 transition">Entrar</button>
+                </div>
+            </div>
+
+            <div id="admin-dashboard-view" class="p-6 overflow-y-auto space-y-6 hidden flex-1">
+                <div class="flex justify-between items-center bg-mistica-50 p-3 rounded-xl">
+                    <span class="text-xs font-bold text-mistica-800 uppercase">Modo Administrador Activo</span>
+                    <button onclick="logoutAdmin()" class="text-xs text-red-600 hover:underline font-semibold">Cerrar Sesión</button>
+                </div>
+
+                <!-- BOTÓN MÁGICO DE GUARDADO AUTOMÁTICO -->
+                <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div>
+                        <h4 class="font-bold text-xs text-emerald-900"><i class="fa-solid fa-download mr-1"></i> Guardar Cambios para Netlify</h4>
+                        <p class="text-[11px] text-emerald-700">Descargá el archivo actualizado con tus nuevos productos y subilo a Netlify.</p>
+                    </div>
+                    <button onclick="downloadUpdatedHtml()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 px-4 rounded-xl text-xs transition shadow shrink-0">
+                        <i class="fa-solid fa-file-arrow-down mr-1"></i> Descargar index.html
+                    </button>
+                </div>
+
+                <!-- Configuración General -->
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <h4 class="font-bold text-xs text-slate-800"><i class="fa-solid fa-gear mr-1 text-mistica-600"></i> Configuración General y Logotipo</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="cfg-name" placeholder="Nombre de la Tienda" class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                        <input type="text" id="cfg-phone" placeholder="WhatsApp (ej: 5492494695430)" class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="cfg-address" placeholder="Dirección" class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                        <input type="text" id="cfg-hours" placeholder="Horarios" class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Subir Imagen de Logotipo</label>
+                        <input type="file" id="cfg-logo-file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-mistica-100 file:text-mistica-700">
+                    </div>
+                    <button onclick="saveStoreConfig()" class="bg-mistica-900 text-white font-semibold py-2 px-4 rounded-xl text-xs hover:bg-mistica-800 transition">Guardar Configuración</button>
+                </div>
+
+                <!-- Formulario Producto -->
+                <form id="product-form" onsubmit="saveProduct(event)" class="space-y-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 class="font-bold text-xs text-slate-800" id="form-title">Agregar Nuevo Producto</h4>
+                    <input type="hidden" id="edit-product-id">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="prod-name" placeholder="Nombre del producto *" required class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                        <div>
+                            <label class="block text-[10px] text-slate-500 mb-1">Categoría</label>
+                            <input type="text" id="prod-category" list="category-suggestions" placeholder="Ej: Sahumerios, Tarot, Amuletos..." required class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                            <datalist id="category-suggestions">
+                                <option value="Sahumerios y Aromas">
+                                <option value="Cristales y Piedras">
+                                <option value="Velas y Velones">
+                                <option value="Tarot y Oráculos">
+                                <option value="Amuletos y Decoración">
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <input type="number" id="prod-price" placeholder="Precio (ej: 30000) *" required class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                        <input type="text" id="prod-colors" placeholder="Colores/Opciones (separados por coma)" oninput="updateAdminStockCheckboxes()" class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                        <input type="text" id="prod-specs" placeholder="Medidas / Peso (ej: 78 cartas)" class="w-full px-3 py-2 bg-white border rounded-xl text-xs">
+                    </div>
+
+                    <div id="admin-variant-stock-container" class="bg-white p-3 rounded-xl border space-y-2 hidden">
+                        <label class="block text-[11px] font-bold text-slate-700">Casillas de Stock por Variante:</label>
+                        <div id="admin-stock-checkboxes" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <textarea id="prod-desc" rows="2" placeholder="Descripción del producto..." class="w-full px-3 py-2 bg-white border rounded-xl text-xs"></textarea>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Subir Fotos o Videos</label>
+                        <input type="file" id="prod-media" accept="image/*,video/*" multiple class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-mistica-100 file:text-mistica-700">
+                    </div>
+
+                    <div class="flex gap-2 pt-1">
+                        <button type="submit" class="flex-1 bg-mistica-800 text-white font-semibold py-2 rounded-xl text-xs hover:bg-mistica-700 transition">Guardar Producto</button>
+                        <button type="button" onclick="resetForm()" class="bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Cancelar</button>
+                    </div>
+                </form>
+
+                <div class="space-y-2">
+                    <h4 class="font-bold text-xs text-slate-800">Listado de Productos en Stock</h4>
+                    <div id="admin-product-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
     <script>
-        let products = [];
-        let config = {
-            owner: localStorage.getItem('gh_owner') || '',
-            repo: localStorage.getItem('gh_repo') || '',
-            token: localStorage.getItem('gh_token') || ''
+        const defaultStoreConfig = {
+            name: "LA CUEVA MÍSTICA",
+            phone: "5492494695430",
+            address: "Av. Miguens 544, Ayacucho Bs. As.",
+            hours: "Lun a Sáb: 08:00 a 12:00 | 16:30 a 20:00",
+            logo: ""
         };
 
-        // Cargar configuración previa en inputs
-        document.getElementById('gh-owner').value = config.owner;
-        document.getElementById('gh-repo').value = config.repo;
-        document.getElementById('gh-token').value = config.token;
+        let storeConfig = JSON.parse(localStorage.getItem('cm_config')) || defaultStoreConfig;
 
-        function saveConfig() {
-            localStorage.setItem('gh_owner', document.getElementById('gh-owner').value);
-            localStorage.setItem('gh_repo', document.getElementById('gh-repo').value);
-            localStorage.setItem('gh_token', document.getElementById('gh-token').value);
-            alert('¡Llave de conexión guardada en este navegador!');
-            location.reload();
-        }
-
-        function toggleAdmin() {
-            const panel = document.getElementById('admin-panel');
-            panel.classList.toggle('active');
-        }
-
-        // Cargar productos desde el archivo products.json en vivo
-        async function loadProducts() {
-            try {
-                let res = await fetch('products.json?t=' + Date.now());
-                let data = await res.json();
-                products = data.products || [];
-                renderProducts();
-            } catch (err) {
-                document.getElementById('product-grid').innerHTML = '<p>Error al invocar los productos. Verificá que products.json exista.</p>';
+        // Productos precargados oficiales (Bruma, Tarots y Budas)
+        const defaultProducts = [
+            {
+                id: 1,
+                name: "Bruma Aromatizante Vrinda",
+                category: "Sahumerios y Aromas",
+                price: 7700,
+                colors: ["Copal-Pomelo", "Patchouly-Indonesia", "Guayaba", "Gardenia-Vainilla", "Rosa-Pomelo"],
+                optionStock: { "Copal-Pomelo": true, "Patchouly-Indonesia": true, "Guayaba": true, "Gardenia-Vainilla": true, "Rosa-Pomelo": true },
+                specs: "250 ml",
+                desc: "Aromatizante en bruma de alta calidad para ambientes y telas, presentado en envase ámbar con atomizador spray.",
+                mediaList: [{ url: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80", type: "image" }],
+                inStock: true
+            },
+            {
+                id: 2,
+                name: "Egyptian Tarot (Iluminarte)",
+                category: "Tarot y Oráculos",
+                price: 30000,
+                colors: ["Único"],
+                optionStock: { "Único": true },
+                specs: "78 cartas",
+                desc: "Mazo de tarot de inspiración egipcia de 78 cartas a todo color con folleto de instrucciones incluido.",
+                mediaList: [{ url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80", type: "image" }],
+                inStock: true
+            },
+            {
+                id: 3,
+                name: "Tarot Rider Waite Edición en Español",
+                category: "Tarot y Oráculos",
+                price: 30000,
+                colors: ["Único"],
+                optionStock: { "Único": true },
+                specs: "78 cartas",
+                desc: "El clásico mazo de tarot tradicional en edición en español con instrucciones.",
+                mediaList: [{ url: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80", type: "image" }],
+                inStock: true
+            },
+            {
+                id: 4,
+                name: "Estatuilla de Buda Decorativo en Meditación",
+                category: "Amuletos y Decoración",
+                price: 25000,
+                colors: ["Negro y Dorado", "Blanco y Fucsia"],
+                optionStock: { "Negro y Dorado": true, "Blanco y Fucsia": true },
+                specs: "Terminación artesanal con pedrería",
+                desc: "Hermosa figura decorativa de Buda en postura de meditación (Dhyana Mudra). Ideal para armonizar espacios y atraer paz y equilibrio.",
+                mediaList: [{ url: "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=600&q=80", type: "image" }],
+                inStock: true
             }
+        ];
+
+        let products = JSON.parse(localStorage.getItem('cm_products')) || defaultProducts;
+        let cart = JSON.parse(localStorage.getItem('cm_cart')) || [];
+        let currentCategory = 'todos';
+        let currentSelectedColor = '';
+        let isAdminLoggedIn = localStorage.getItem('cm_admin') === 'true';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyStoreConfig();
+            renderCategories();
+            renderProducts();
+            updateCartCounter();
+            updateWhatsAppCheckoutLink();
+            if(isAdminLoggedIn) {
+                document.getElementById('admin-login-view').classList.add('hidden');
+                document.getElementById('admin-dashboard-view').classList.remove('hidden');
+                loadConfigToAdminForm();
+                renderAdminProductList();
+            }
+        });
+
+        function applyStoreConfig() {
+            document.getElementById('store-title-header').innerText = storeConfig.name;
+            document.getElementById('page-title').innerText = `${storeConfig.name} | Tienda Esotérica`;
+            document.getElementById('store-location-header').innerText = storeConfig.address.split(',')[1] || storeConfig.address;
+            document.getElementById('sidebar-address').innerText = storeConfig.address.split(',')[0] || storeConfig.address;
+            document.getElementById('sidebar-hours').innerText = storeConfig.hours;
+            document.getElementById('footer-address').innerText = `${storeConfig.name} • ${storeConfig.address}`;
+            
+            const waMsg = encodeURIComponent("¡Hola! Quiero consultar sobre los productos de " + storeConfig.name + ".");
+            document.getElementById('hero-whatsapp-btn').href = `https://wa.me/${storeConfig.phone}?text=${waMsg}`;
+            document.getElementById('footer-wa-link').href = `https://wa.me/${storeConfig.phone}?text=${waMsg}`;
+
+            const logoHtml = storeConfig.logo ? 
+                `<img src="${storeConfig.logo}" class="w-full h-full object-cover rounded-full">` :
+                `<div class="w-full h-full bg-mistica-900 text-white flex items-center justify-center font-cinzel font-bold text-sm rounded-full">CM</div>`;
+            
+            document.getElementById('header-logo-container').innerHTML = logoHtml;
+            document.getElementById('hero-logo-container').innerHTML = logoHtml;
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('sidebar-backdrop').classList.toggle('hidden');
+        }
+
+        function getCategories() {
+            const cats = new Set();
+            products.forEach(p => { if(p.category) cats.add(p.category.trim()); });
+            return Array.from(cats);
+        }
+
+        function renderCategories() {
+            const cats = getCategories();
+            const pillsContainer = document.getElementById('category-pills-container');
+            let pillsHtml = `<button onclick="filterCategory('todos')" id="pill-todos" class="category-pill px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${currentCategory === 'todos' ? 'bg-mistica-900 text-white shadow' : 'bg-white text-slate-600 border border-slate-200 hover:bg-mistica-50'}">Todos</button>`;
+            cats.forEach(c => {
+                const isActive = currentCategory === c;
+                pillsHtml += `<button onclick="filterCategory('${c}')" id="pill-${c}" class="category-pill px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${isActive ? 'bg-mistica-900 text-white shadow' : 'bg-white text-slate-600 border border-slate-200 hover:bg-mistica-50'}">${c}</button>`;
+            });
+            pillsContainer.innerHTML = pillsHtml;
+
+            const sidebarContainer = document.getElementById('sidebar-categories-container');
+            sidebarContainer.innerHTML = cats.map(c => `
+                <button onclick="filterCategory('${c}'); toggleSidebar();" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-mistica-50 text-slate-600 flex items-center gap-3 transition text-xs font-medium">
+                    <i class="fa-solid fa-tag text-mistica-500 w-5"></i> ${c}
+                </button>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            showCatalogView();
+            renderCategories();
+            document.getElementById('current-category-title').innerText = cat === 'todos' ? 'Catálogo de Productos' : cat;
+            renderProducts();
+        }
+
+        function showCatalogView() {
+            document.getElementById('catalog-view').classList.remove('hidden');
+            document.getElementById('detail-view').classList.add('hidden');
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         function renderProducts() {
             const grid = document.getElementById('product-grid');
-            if (products.length === 0) {
-                grid.innerHTML = '<p>La cueva está vacía por ahora.</p>';
+            const search = document.getElementById('search-input').value.toLowerCase();
+            
+            let filtered = products.filter(p => {
+                const matchesCat = currentCategory === 'todos' || p.category === currentCategory;
+                const matchesSearch = p.name.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search);
+                return matchesCat && matchesSearch;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 text-sm">No se encontraron productos.</div>`;
                 return;
             }
-            grid.innerHTML = products.map(p => `
-                <div class="card">
-                    <img src="${p.image}" alt="${p.name}">
-                    <div>
-                        <h3>${p.name}</h3>
-                        <p>$ ${p.price}</p>
+
+            grid.innerHTML = filtered.map(p => {
+                const firstMedia = (p.mediaList && p.mediaList.length > 0) ? p.mediaList[0] : { url: p.media || 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80', type: 'image' };
+                return `
+                    <div onclick="showProductDetail(${p.id})" class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between transition hover:shadow-md cursor-pointer group">
+                        <div>
+                            <div class="relative h-60 bg-slate-100 flex items-center justify-center overflow-hidden">
+                                ${firstMedia.type === 'video' ? 
+                                    `<video src="${firstMedia.url}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition duration-300" autoplay loop muted></video>` :
+                                    `<img src="${firstMedia.url}" alt="${p.name}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition duration-300">`
+                                }
+                                <span class="absolute top-3 left-3 bg-white/90 text-mistica-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow">${p.category}</span>
+                                ${!p.inStock ? '<span class="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center text-white font-bold text-sm">Sin Stock</span>' : ''}
+                            </div>
+                            <div class="p-5 space-y-1.5">
+                                <h4 class="font-cinzel font-bold text-base text-slate-900 group-hover:text-mistica-700 transition">${p.name}</h4>
+                                <p class="text-xs text-slate-500 line-clamp-1">${p.desc}</p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between border-t border-slate-100 mt-2">
+                            <span class="font-bold text-lg text-mistica-800">$${Number(p.price).toLocaleString('es-AR')}</span>
+                            <span class="text-xs font-semibold text-mistica-600 bg-mistica-50 px-3 py-1.5 rounded-xl group-hover:bg-mistica-800 group-hover:text-white transition">Ver detalle <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
                     </div>
-                    <button class="btn btn-danger" onclick="deleteProduct(${p.id})">Eliminar</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        async function add
+        function showProductDetail(id) {
+            const p = products.find(item => item.id === id);
+            if(!p) return;
+            document.getElementById('catalog-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.remove('hidden');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+
+            const mediaList = (p.mediaList && p.mediaList.length > 0) ? p.mediaList : [{ url: p.media || 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80', type: 'image' }];
+            const colorsList = p.colors && p.colors.length > 0 && p.colors[0] !== "" ? p.colors : [];
+            const optionStock = p.optionStock || {};
+
+            document.getElementById('product-detail-container').innerHTML = `
+                <div class="space-y-4">
+                    <div id="main-media-viewer" class="relative h-96 bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden shadow-inner">
+                        ${mediaList[0].type === 'video' ? 
+                            `<video src="${mediaList[0].url}" class="max-w-full max-h-full object-contain" autoplay loop muted controls></video>` :
+                            `<img src="${mediaList[0].url}" alt="${p.name}" class="max-w-full max-h-full object-contain">`
+                        }
+                        <span class="absolute top-4 left-4 bg-white/90 text-mistica-900 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase shadow">${p.category}</span>
+                    </div>
+                    ${mediaList.length > 1 ? `
+                        <div class="flex gap-2 overflow-x-auto pb-2">
+                            ${mediaList.map((m, idx) => `
+                                <div onclick="switchMedia(${idx})" class="w-16 h-16 rounded-xl border-2 border-slate-200 overflow-hidden cursor-pointer shrink-0 bg-slate-50 flex items-center justify-center hover:border-mistica-500 transition">
+                                    ${m.type === 'video' ? `<video src="${m.url}" class="w-full h-full object-cover"></video>` : `<img src="${m.url}" class="w-full h-full object-cover">`}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-slate-900">${p.name}</h2>
+                        <p class="text-2xl font-bold text-mistica-700">$${Number(p.price).toLocaleString('es-AR')}</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">${p.desc}</p>
+                        
+                        ${p.specs ? `<div class="bg-slate-100 px-3 py-2 rounded-xl text-xs text-slate-700 inline-flex items-center gap-1.5"><i class="fa-solid fa-ruler text-mistica-600"></i> ${p.specs}</div>` : ''}
+
+                        ${colorsList.length > 0 ? `
+                            <div class="space-y-2 pt-2">
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Seleccionar Opción / Color / Aroma:</label>
+                                <div class="flex flex-wrap gap-2">
+                                    ${colorsList.map((c, idx) => {
+                                        const trimmed = c.trim();
+                                        const isAvailable = optionStock[trimmed] !== false;
+                                        return `
+                                            <button onclick="selectDetailColor('${trimmed}', ${isAvailable}, this)" class="color-btn px-4 py-2 rounded-xl border text-xs font-semibold transition ${!isAvailable ? 'opacity-40 bg-slate-100 text-slate-400 border-slate-300 line-through' : (idx === 0 ? 'bg-mistica-900 text-white border-mistica-900' : 'bg-white text-slate-700 border-slate-200 hover:bg-mistica-50')}">
+                                                ${trimmed} ${!isAvailable ? '(Sin stock)' : ''}
+                                            </button>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <div class="space-y-2 pt-2">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Cantidad:</label>
+                            <div class="flex items-center border border-slate-200 rounded-xl w-32 overflow-hidden bg-slate-50">
+                                <button onclick="adjustDetailQty(-1)" class="px-3.5 py-2 hover:bg-slate-200 text-sm font-bold">-</button>
+                                <span id="detail-qty" class="flex-1 text-center font-bold text-sm">1</span>
+                                <button onclick="adjustDetailQty(1)" class="px-3.5 py-2 hover:bg-slate-200 text-sm font-bold">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        ${p.inStock ? `
+                            <button onclick="addDetailToCart(${p.id})" class="w-full bg-mistica-800 hover:bg-mistica-700 text-white font-semibold py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-base">
+                                <i class="fa-solid fa-bag-shopping"></i> Agregar al Pedido
+                            </button>
+                        ` : `
+                            <div class="w-full bg-red-100 text-red-700 font-semibold py-4 rounded-2xl text-center text-sm">Producto Sin Stock</div>
+                        `}
+                    </div>
+                </div>
+            `;
+            window.currentActiveProductMedia = mediaList;
+            if(colorsList.length > 0) currentSelectedColor = colorsList[0].trim();
+        }
+
+        function switchMedia(idx) {
+            const mediaList = window.currentActiveProductMedia;
+            if(!mediaList || !mediaList[idx]) return;
+            const m = mediaList[idx];
+            document.getElementById('main-media-viewer').innerHTML = `
+                ${m.type === 'video' ? `<video src="${m.url}" class="max-w-full max-h-full object-contain" autoplay loop muted controls></video>` : `<img src="${m.url}" class="max-w-full max-h-full object-contain">`}
+                <span class="absolute top-4 left-4 bg-white/90 text-mistica-900 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase shadow">Catálogo</span>
+            `;
+        }
+
+        function selectDetailColor(color, isAvailable, btn) {
+            if(!isAvailable) return;
+            currentSelectedColor = color;
+            document.querySelectorAll('.color-btn').forEach(b => {
+                if(!b.classList.contains('line-through')) b.className = "color-btn px-4 py-2 rounded-xl border text-xs font-semibold transition bg-white text-slate-700 border-slate-200 hover:bg-mistica-50";
+            });
+            btn.className = "color-btn px-4 py-2 rounded-xl border text-xs font-semibold transition bg-mistica-900 text-white border-mistica-900";
+        }
+
+        function adjustDetailQty(delta) {
+            const qtyEl = document.getElementById('detail-qty');
+            let q = parseInt(qtyEl.innerText) + delta;
+            if(q < 1) q = 1;
+            qtyEl.innerText = q;
+        }
+
+        function addDetailToCart(id) {
+            const product = products.find(p => p.id === id);
+            const qty = parseInt(document.getElementById('detail-qty').innerText) || 1;
+            const chosenColor = currentSelectedColor || 'Único';
+            const existingIndex = cart.findIndex(item => item.id === id && item.color === chosenColor);
+            if(existingIndex > -1) cart[existingIndex].qty += qty;
+            else cart.push({ id: product.id, name: product.name, price: product.price, color: chosenColor, qty: qty });
+            saveCart();
+            updateCartCounter();
+            toggleCart();
+        }
+
+        function updateCartCounter() {
+            document.getElementById('cart-counter').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) renderCartItems();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total');
+            if(cart.length === 0) {
+                container.innerHTML = `<div class="py-12 text-center text-slate-400 text-sm">Tu pedido está vacío.</div>`;
+                totalEl.innerText = '$0';
+                return;
+            }
+            let total = 0;
+            container.innerHTML = cart.map((item, index) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                return `
+                    <div class="py-3 flex items-center justify-between gap-3 text-xs">
+                        <div>
+                            <h5 class="font-bold text-slate-800">${item.name}</h5>
+                            <p class="text-slate-500">Opción: ${item.color} • $${Number(item.price).toLocaleString('es-AR')} c/u</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold">${item.qty}u.</span>
+                            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            totalEl.innerText = `$${total.toLocaleString('es-AR')}`;
+            updateWhatsAppCheckoutLink();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveCart();
+            updateCartCounter();
+            renderCartItems();
+        }
+
+        function saveCart() {
+            localStorage.setItem('cm_cart', JSON.stringify(cart));
+            updateWhatsAppCheckoutLink();
+        }
+
+        function updateWhatsAppCheckoutLink() {
+            let message = `¡Hola! Quiero hacer el siguiente pedido en *${storeConfig.name}*:\n\n`;
+            let total = 0;
+            if(cart.length === 0) {
+                message = `¡Hola! Quiero consultar sobre los productos de ${storeConfig.name}.`;
+            } else {
+                cart.forEach(item => {
+                    const sub = item.price * item.qty;
+                    total += sub;
+                    message += `• ${item.qty}x *${item.name}* (${item.color}) - $${sub.toLocaleString('es-AR')}\n`;
+                });
+                message += `\n*Total estimado: $${total.toLocaleString('es-AR')}*\n\n¿Me confirmás stock y coordinación de pago/envío?`;
+            }
+            document.getElementById('whatsapp-checkout-btn').href = `https://wa.me/${storeConfig.phone}?text=${encodeURIComponent(message)}`;
+        }
+
+        // Admin Panel
+        function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
+        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+
+        function verifyAdminPass() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if(pass === 'Lactanciade1por') {
+                isAdminLoggedIn = true;
+                localStorage.setItem('cm_admin', 'true');
+                document.getElementById('admin-login-view').classList.add('hidden');
+                document.getElementById('admin-dashboard-view').classList.remove('hidden');
+                loadConfigToAdminForm();
+                renderAdminProductList();
+            } else {
+                alert('Clave incorrecta');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            localStorage.removeItem('cm_admin');
+            document.getElementById('admin-login-view').classList.remove('hidden');
+            document.getElementById('admin-dashboard-view').classList.add('hidden');
+            document.getElementById('admin-pass-input').value = '';
+        }
+
+        function loadConfigToAdminForm() {
+            document.getElementById('cfg-name').value = storeConfig.name;
+            document.getElementById('cfg-phone').value = storeConfig.phone;
+            document.getElementById('cfg-address').value = storeConfig.address;
+            document.getElementById('cfg-hours').value = storeConfig.hours;
+        }
+
+        function saveStoreConfig() {
+            storeConfig.name = document.getElementById('cfg-name').value || "LA CUEVA MÍSTICA";
+            storeConfig.phone = document.getElementById('cfg-phone').value || "5492494695430";
+            storeConfig.address = document.getElementById('cfg-address').value;
+            storeConfig.hours = document.getElementById('cfg-hours').value;
+
+            const logoFile = document.getElementById('cfg-logo-file').files[0];
+            if(logoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    storeConfig.logo = e.target.result;
+                    localStorage.setItem('cm_config', JSON.stringify(storeConfig));
+                    applyStoreConfig();
+                    alert('¡Configuración actualizada!');
+                };
+                reader.readAsDataURL(logoFile);
+            } else {
+                localStorage.setItem('cm_config', JSON.stringify(storeConfig));
+                applyStoreConfig();
+                alert('¡Configuración actualizada!');
+            }
+        }
+
+        function updateAdminStockCheckboxes(existingStock = {}) {
+            const colorsInput = document.getElementById('prod-colors').value;
+            const container = document.getElementById('admin-variant-stock-container');
+            const checkboxesDiv = document.getElementById('admin-stock-checkboxes');
+            const list = colorsInput.split(',').map(c => c.trim()).filter(c => c !== '');
+            if(list.length === 0) {
+                container.classList.add('hidden');
+                checkboxesDiv.innerHTML = '';
+                return;
+            }
+            container.classList.remove('hidden');
+            checkboxesDiv.innerHTML = list.map(item => {
+                const isChecked = existingStock[item] !== false;
+                return `
+                    <label class="flex items-center gap-2 bg-slate-50 px-2 py-1 rounded-lg border text-[11px] cursor-pointer">
+                        <input type="checkbox" class="variant-stock-check rounded text-mistica-600" data-variant="${item}" ${isChecked ? 'checked' : ''}>
+                        <span class="font-medium text-slate-700">${item}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function renderAdminProductList() {
+            const list = document.getElementById('admin-product-list');
+            list.innerHTML = products.map(p => {
+                const thumb = (p.mediaList && p.mediaList.length > 0) ? p.mediaList[0].url : (p.media || '');
+                return `
+                    <div class="flex items-center justify-between p-2.5 bg-white border rounded-xl gap-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <img src="${thumb}" class="w-8 h-8 object-cover rounded-lg">
+                            <div>
+                                <h5 class="font-bold">${p.name}</h5>
+                                <p class="text-[10px] text-slate-500">$${Number(p.price).toLocaleString('es-AR')} • ${p.category}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="toggleStock(${p.id})" class="px-2 py-1 rounded text-[10px] font-bold ${p.inStock ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">
+                                ${p.inStock ? 'Disponible' : 'Sin Stock'}
+                            </button>
+                            <button onclick="editProduct(${p.id})" class="p-1 text-slate-500 hover:text-mistica-600"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProduct(${p.id})" class="p-1 text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('edit-product-id').value;
+            const name = document.getElementById('prod-name').value;
+            const category = document.getElementById('prod-category').value.trim();
+            const price = Number(document.getElementById('prod-price').value);
+            const colors = document.getElementById('prod-colors').value.split(',').map(c => c.trim()).filter(c => c !== '');
+            const specs = document.getElementById('prod-specs').value;
+            const desc = document.getElementById('prod-desc').value;
+            const mediaInput = document.getElementById('prod-media');
+
+            const optionStock = {};
+            document.querySelectorAll('.variant-stock-check').forEach(chk => {
+                optionStock[chk.getAttribute('data-variant')] = chk.checked;
+            });
+
+            const finalizeSave = (mediaList) => {
+                if(idInput) {
+                    const p = products.find(item => item.id == idInput);
+                    if(p) {
+                        p.name = name; p.category = category; p.price = price;
+                        p.colors = colors; p.optionStock = optionStock; p.specs = specs; p.desc = desc;
+                        if(mediaList && mediaList.length > 0) p.mediaList = mediaList;
+                    }
+                } else {
+                    const newProd = {
+                        id: Date.now(), name, category, price,
+                        colors: colors.length > 0 ? colors : ['Único'],
+                        optionStock: Object.keys(optionStock).length > 0 ? optionStock : { 'Único': true },
+                        specs, desc,
+                        mediaList: (mediaList && mediaList.length > 0) ? mediaList : [{ url: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80', type: 'image' }],
+                        inStock: true
+                    };
+                    products.push(newProd);
+                }
+                localStorage.setItem('cm_products', JSON.stringify(products));
+                renderCategories(); renderProducts(); renderAdminProductList(); resetForm();
+                alert('¡Producto guardado! Recordá descargar el archivo actualizado desde el botón verde del panel.');
+            };
+
+            const files = mediaInput.files;
+            if(files && files.length > 0) {
+                let processed = 0;
+                let newMediaList = [];
+                Array.from(files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    const isVideo = file.type.startsWith('video');
+                    reader.onload = function(evt) {
+                        newMediaList[index] = { url: evt.target.result, type: isVideo ? 'video' : 'image' };
+                        processed++;
+                        if(processed === files.length) finalizeSave(newMediaList);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                if(idInput) {
+                    const p = products.find(item => item.id == idInput);
+                    finalizeSave(p.mediaList);
+                } else {
+                    finalizeSave([{ url: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80', type: 'image' }]);
+                }
+            }
+        }
+
+        function editProduct(id) {
+            const p = products.find(item => item.id === id);
+            if(!p) return;
+            document.getElementById('edit-product-id').value = p.id;
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-colors').value = (p.colors || []).join(', ');
+            document.getElementById('prod-specs').value = p.specs;
+            document.getElementById('prod-desc').value = p.desc;
+            document.getElementById('form-title').innerText = "Editar Producto";
+            updateAdminStockCheckboxes(p.optionStock || {});
+        }
+
+        function resetForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-product-id').value = '';
+            document.getElementById('form-title').innerText = "Agregar Nuevo Producto";
+            document.getElementById('admin-variant-stock-container').classList.add('hidden');
+            document.getElementById('admin-stock-checkboxes').innerHTML = '';
+        }
+
+        function toggleStock(id) {
+            const p = products.find(item => item.id === id);
+            if(p) {
+                p.inStock = !p.inStock;
+                localStorage.setItem('cm_products', JSON.stringify(products));
+                renderProducts(); renderAdminProductList();
+            }
+        }
+
+        function deleteProduct(id) {
+            if(confirm('¿Eliminar este producto?')) {
+                products = products.filter(item => item.id !== id);
+                localStorage.setItem('cm_products', JSON.stringify(products));
+                renderCategories(); renderProducts(); renderAdminProductList();
+            }
+        }
+
+        // FUNCIÓN MÁGICA: Exporta el HTML autoincluido con todos los productos actuales
+        function downloadUpdatedHtml() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('¡Archivo descargado con éxito! Ahora arrastralo a Netlify y tu web se actualizará con todo lo nuevo.');
+        }
+    </script>
+</body>
+</html>
