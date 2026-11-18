@@ -1,0 +1,5 @@
+{
+  "products": [
+    { "id": 1, "name": "Producto de Ejemplo", "price": "15000", "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" }
+  ]
+}
