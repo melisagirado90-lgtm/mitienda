@@ -3,57 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Tienda Dinámica</title>
+    <title>La Cueva Mística - Catálogo Mágico</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; margin: 0; padding: 20px; color: #333; }
-        header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 30px auto; background: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        h1 { margin: 0; font-size: 24px; color: #4f46e5; }
-        .btn { background: #4f46e5; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-        .btn:hover { background: #4338ca; }
+        :root {
+            --bg-dark: #12121a;
+            --card-bg: #1a1a24;
+            --accent: #9333ea;
+            --accent-hover: #7e22ce;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --gold: #f59e0b;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-dark); margin: 0; padding: 20px; color: var(--text-main); }
+        header { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 15px 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(147, 51, 234, 0.15); border: 1px solid rgba(147, 51, 234, 0.3); }
+        h1 { margin: 0; font-size: 24px; color: #d8b4fe; letter-spacing: 1px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .btn:hover { background: var(--accent-hover); }
         .btn-danger { background: #ef4444; }
         .btn-danger:hover { background: #dc2626; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
-        .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        .card h3 { margin: 5px 0; font-size: 18px; }
-        .card p { color: #10b981; font-weight: bold; font-size: 16px; margin: 5px 0 15px 0; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-3px); border-color: rgba(147, 51, 234, 0.4); }
+        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
+        .card h3 { margin: 5px 0; font-size: 18px; color: var(--text-main); }
+        .card p { color: var(--gold); font-weight: bold; font-size: 17px; margin: 5px 0 15px 0; }
+        
         /* Panel Admin */
-        #admin-panel { background: white; padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: none; }
+        #admin-panel { background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid var(--accent); box-shadow: 0 4px 20px rgba(0,0,0,0.4); display: none; }
         #admin-panel.active { display: block; }
-        input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; }
-        .config-box { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 12px; background: #0f0f13; border: 1px solid #374151; color: white; border-radius: 6px; box-sizing: border-box; }
+        input:focus, textarea:focus { border-color: var(--accent); outline: none; }
+        .config-box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; border: 1px dashed #4b5563; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Mi Catálogo Online</h1>
-        <button class="btn" onclick="toggleAdmin()">Modo Administrador</button>
+        <h1>🔮 La Cueva Mística</h1>
+        <button class="btn" onclick="toggleAdmin()">⚙️ Panel Administrador</button>
     </header>
 
     <div class="container">
         <!-- Panel de Administración -->
         <div id="admin-panel">
-            <h2>Panel de Control</h2>
+            <h2>Panel de Control Mágico</h2>
             <div class="config-box">
-                <p><strong>Configuración de GitHub (Solo la primera vez):</strong></p>
+                <p><strong>Configuración de Conexión (Solo la primera vez desde este navegador):</strong></p>
                 <input type="text" id="gh-owner" placeholder="Tu usuario de GitHub (Ej: tu-usuario)">
-                <input type="text" id="gh-repo" placeholder="Nombre de tu repositorio (Ej: mi-tienda)">
+                <input type="text" id="gh-repo" placeholder="Nombre de tu repositorio (Ej: mitienda)">
                 <input type="password" id="gh-token" placeholder="GitHub Personal Access Token (ghp_...)">
-                <button class="btn" onclick="saveConfig()">Guardar Datos de Conexión</button>
+                <button class="btn" onclick="saveConfig()">Guardar Llave de Conexión</button>
             </div>
 
-            <h3>Agregar Nuevo Producto</h3>
-            <input type="text" id="p-name" placeholder="Nombre del producto">
+            <h3>Agregar Nuevo Tesoro</h3>
+            <input type="text" id="p-name" placeholder="Nombre del producto / artefacto">
             <input type="text" id="p-price" placeholder="Precio (Ej: 15000)">
-            <input type="text" id="p-image" placeholder="URL de la imagen (Link directo)">
-            <button class="btn" onclick="addProduct()">Guardar y Publicar en la Web</button>
+            <input type="text" id="p-image" placeholder="URL de la imagen (Link directo de foto)">
+            <button class="btn" onclick="addProduct()">✨ Guardar y Publicar en la Web</button>
         </div>
 
         <!-- Listado de Productos -->
         <div class="grid" id="product-grid">
-            <p>Cargando productos...</p>
+            <p>Invocando tesoros de La Cueva Mística...</p>
         </div>
     </div>
 
@@ -65,7 +77,7 @@
             token: localStorage.getItem('gh_token') || ''
         };
 
-        // Cargar configuración en inputs si existe
+        // Cargar configuración previa en inputs
         document.getElementById('gh-owner').value = config.owner;
         document.getElementById('gh-repo').value = config.repo;
         document.getElementById('gh-token').value = config.token;
@@ -74,7 +86,7 @@
             localStorage.setItem('gh_owner', document.getElementById('gh-owner').value);
             localStorage.setItem('gh_repo', document.getElementById('gh-repo').value);
             localStorage.setItem('gh_token', document.getElementById('gh-token').value);
-            alert('¡Configuración guardada en este navegador!');
+            alert('¡Llave de conexión guardada en este navegador!');
             location.reload();
         }
 
@@ -83,7 +95,7 @@
             panel.classList.toggle('active');
         }
 
-        // Cargar productos desde el JSON al iniciar
+        // Cargar productos desde el archivo products.json en vivo
         async function loadProducts() {
             try {
                 let res = await fetch('products.json?t=' + Date.now());
@@ -91,14 +103,14 @@
                 products = data.products || [];
                 renderProducts();
             } catch (err) {
-                document.getElementById('product-grid').innerHTML = '<p>Error al cargar productos.</p>';
+                document.getElementById('product-grid').innerHTML = '<p>Error al invocar los productos. Verificá que products.json exista.</p>';
             }
         }
 
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             if (products.length === 0) {
-                grid.innerHTML = '<p>No hay productos cargados.</p>';
+                grid.innerHTML = '<p>La cueva está vacía por ahora.</p>';
                 return;
             }
             grid.innerHTML = products.map(p => `
@@ -113,86 +125,4 @@
             `).join('');
         }
 
-        async function addProduct() {
-            const name = document.getElementById('p-name').value;
-            const price = document.getElementById('p-price').value;
-            const image = document.getElementById('p-image').value;
-
-            if (!name || !price || !image) {
-                alert('Completá todos los campos.');
-                return;
-            }
-
-            const newProduct = {
-                id: Date.now(),
-                name: name,
-                price: price,
-                image: image
-            };
-
-            products.push(newProduct);
-            await updateGitHub();
-        }
-
-        async function deleteProduct(id) {
-            if (!confirm('¿Seguro querés eliminar este producto?')) return;
-            products = products.filter(p => p.id !== id);
-            await updateGitHub();
-        }
-
-        // Función clave: Actualiza el archivo en GitHub automáticamente
-        async function updateGitHub() {
-            const owner = localStorage.getItem('gh_owner');
-            const repo = localStorage.getItem('gh_repo');
-            const token = localStorage.getItem('gh_token');
-
-            if (!owner || !repo || !token) {
-                alert('Falta configurar los datos de GitHub en el panel de administración.');
-                return;
-            }
-
-            const path = 'products.json';
-            const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-
-            try {
-                // 1. Obtener el SHA actual del archivo en GitHub
-                let res = await fetch(url, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                let fileData = await res.json();
-                let sha = fileData.sha;
-
-                // 2. Codificar el nuevo contenido en Base64
-                const contentObj = { products: products };
-                const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(contentObj, null, 2))));
-
-                // 3. Enviar el commit a GitHub
-                let updateRes = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: "Actualización automática de catálogo desde panel admin",
-                        content: updatedContent,
-                        sha: sha
-                    })
-                });
-
-                if (updateRes.ok) {
-                    alert('¡Guardado con éxito! La página se actualizará en unos segundos en todo el mundo.');
-                    location.reload();
-                } else {
-                    let errText = await updateRes.text();
-                    alert('Error al actualizar GitHub: ' + errText);
-                }
-            } catch (err) {
-                alert('Ocurrió un error de red: ' + err.message);
-            }
-        }
-
-        loadProducts();
-    </script>
-</body>
-</html>
+        async function add
